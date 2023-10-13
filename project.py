@@ -20,6 +20,11 @@ conn.commit()
 def add_contact():
     name = name_entry.get()
     phone = phone_entry.get()
+    
+    if not name or not phone:
+        messagebox.showerror("Помилка", "Будь ласка, заповніть обидва поля.")
+        return
+    
     cursor.execute('INSERT INTO contacts (name, email) VALUES (?, ?)', (name, phone))
     conn.commit()
     status_label.config(text="Контакт додано!")
@@ -54,6 +59,7 @@ phone_label = ttk.Label(frame, text="Номер Телефону:")
 phone_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
 phone_entry = ttk.Entry(frame)
 phone_entry.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+phone_entry.config(validate="key", validatecommand=(root.register(lambda P: P.isdigit() or P == ""), "%P"))
 
 add_button = ttk.Button(frame, text="Додати контакт", command=add_contact)
 add_button.grid(row=2, column=0, columnspan=2, pady=10)
@@ -73,7 +79,7 @@ contact_list.column("ID", width=30)
 contact_list.column("Ім'я", width=100)
 contact_list.column("Номер Телефону", width=150)
 
-
+list_contacts()
 root.mainloop()
 
 
